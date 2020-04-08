@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 def apiKeyPropertiesFile = rootProject.file("apikey.properties")
 def apiKeyProperties = new Properties()
@@ -18,8 +19,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "MAP_CLIENT_ID", apiKeyProperties['MAP_CLIENT_ID'])
-        buildConfigField("String", "MAP_CLIENT_SECRET", apiKeyProperties['MAP_CLIENT_SECRET'])
+        resValue "string", "MAP_CLIENT_ID", apiKeyProperties['MAP_CLIENT_ID']
+        resValue "string", "MAP_CLIENT_SECRET", apiKeyProperties['MAP_CLIENT_SECRET']
     }
 
     buildTypes {
@@ -29,6 +30,9 @@ android {
         }
     }
 
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -40,6 +44,10 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
+
+    // lifecycle
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 
     // 네이버 지도 SDK
     implementation 'com.naver.maps:map-sdk:3.7.1'
