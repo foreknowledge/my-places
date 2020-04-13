@@ -1,6 +1,5 @@
 package com.foreknowledge.navermaptest.model.data
 
-import com.foreknowledge.navermaptest.util.MapUtil
 import com.naver.maps.map.overlay.Marker
 
 /**
@@ -15,7 +14,4 @@ data class MarkerPos (
         fun fromMarker(marker: Marker) =
             MarkerPos(marker.position.latitude, marker.position.longitude)
     }
-
-    fun toMarker(markerPos: MarkerPos) =
-        MapUtil.createMarker(markerPos.lat, markerPos.lng)
 }

@@ -8,11 +8,11 @@ import androidx.room.*
 @Dao
 interface MarkerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addNoteEntity(markerEntity: MarkerEntity)
+    suspend fun addMarkerEntity(markerEntity: MarkerEntity)
 
     @Query("SELECT * FROM MarkerEntity")
-    suspend fun getAllNoteEntities(): List<MarkerEntity>
+    suspend fun getAllMarkerEntities(): List<MarkerEntity>
 
     @Delete
-    suspend fun deleteNoteEntity(markerEntity: MarkerEntity)
+    suspend fun deleteMarkerEntity(markerEntity: MarkerEntity)
 }

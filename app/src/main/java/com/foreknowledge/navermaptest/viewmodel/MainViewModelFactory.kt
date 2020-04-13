@@ -12,5 +12,5 @@ class MainViewModelFactory(
     private val naverRepository: NaverRepository
 ) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = MainViewModel(naverRepository) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = MapViewModel(naverRepository) as T
 }

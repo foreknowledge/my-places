@@ -3,6 +3,13 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
+	<data>
+		<import type="android.view.View" />
+		<variable
+			name="viewModel"
+			type="com.foreknowledge.navermaptest.viewmodel.MapViewModel" />
+	</data>
+
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -20,12 +27,24 @@
 			tools:ignore="FragmentTagUsage" />
 
 		<Button
-			android:id="@+id/btn_save"
+			android:id="@+id/btn_main"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="15dp"
-			android:text="@string/btn_save"
-			android:visibility="invisible"
+			android:text="@{viewModel.btnText}"
+			android:visibility="@{viewModel.btnVisibility ? View.VISIBLE: View.INVISIBLE}"
+			android:onClick="@{view -> viewModel.onButtonClick()}"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/btn_cancel" />
+
+		<Button
+			android:id="@+id/btn_cancel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="15dp"
+			android:text="@string/btn_cancel"
+			android:visibility="@{viewModel.btnVisibility ? View.VISIBLE: View.INVISIBLE}"
+			android:onClick="@{view -> viewModel.onCancelClick()}"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent" />
 

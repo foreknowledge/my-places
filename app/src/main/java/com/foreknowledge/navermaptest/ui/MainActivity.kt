@@ -9,8 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.foreknowledge.navermaptest.R
 import com.foreknowledge.navermaptest.databinding.ActivityMainBinding
 import com.foreknowledge.navermaptest.model.repository.NaverRepository
-import com.foreknowledge.navermaptest.util.MapUtil
-import com.foreknowledge.navermaptest.viewmodel.MainViewModel
+import com.foreknowledge.navermaptest.viewmodel.MapViewModel
 import com.foreknowledge.navermaptest.viewmodel.MainViewModelFactory
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -20,12 +19,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 	private lateinit var binding: ActivityMainBinding
 	private val viewModel by lazy {
-		ViewModelProvider(this, MainViewModelFactory(NaverRepository(this@MainActivity)))[MainViewModel::class.java]
+		ViewModelProvider(this, MainViewModelFactory(NaverRepository(this@MainActivity)))[MapViewModel::class.java]
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+		binding.viewModel = viewModel
+		binding.lifecycleOwner = this
 
 		initMapFragment()
 	}
@@ -40,23 +42,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 	@UiThread
 	override fun onMapReady(naverMap: NaverMap) {
-		viewModel.initAllMarkers()
-		subscribeUi(naverMap)
+		viewModel.initMarkers(naverMap)
+		viewModel.setMapClickListener(naverMap)
 
-		setMapClickListener(naverMap)
+		subscribeUi(naverMap)
 	}
 
 	private fun subscribeUi(naverMap: NaverMap) {
-		viewModel.markerList.observe(this, Observer {
-			it.forEach{ marker -> marker.map = naverMap }
-		})
-	}
-
-	private fun setMapClickListener(naverMap: NaverMap) {
-		naverMap.setOnMapClickListener { _, coord ->
-			MapUtil.createMarker(coord.latitude, coord.longitude).apply {
-				map = naverMap
-			}
+		with(viewModel) {
+			focusedMarker.observe(this@MainActivity, Observer { it?.map = naverMap })
+			btnText.observe(this@MainActivity, Observer { showButton() })
 		}
 	}
 }

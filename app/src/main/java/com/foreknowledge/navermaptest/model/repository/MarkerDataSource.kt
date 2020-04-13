@@ -11,9 +11,9 @@ import com.foreknowledge.navermaptest.model.room.MarkerEntity
 class MarkerDataSource(context: Context) {
     private val markerDao = DatabaseService.getInstance(context).markerDao()
 
-    suspend fun getAll(): List<MarkerPos> = markerDao.getAllNoteEntities().map { it.toMarker() }
+    suspend fun getAll(): List<MarkerPos> = markerDao.getAllMarkerEntities().map { it.toMarker() }
 
-    suspend fun add(markerPos: MarkerPos) = markerDao.addNoteEntity(MarkerEntity.fromMarkerPos(markerPos))
+    suspend fun add(markerPos: MarkerPos) = markerDao.addMarkerEntity(MarkerEntity.fromMarkerPos(markerPos))
 
-    suspend fun delete(markerPos: MarkerPos) = markerDao.deleteNoteEntity(MarkerEntity.fromMarkerPos(markerPos))
+    suspend fun delete(markerPos: MarkerPos) = markerDao.deleteMarkerEntity(MarkerEntity.fromMarkerPos(markerPos))
 }
