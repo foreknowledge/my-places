@@ -1,7 +1,7 @@
 package com.foreknowledge.navermaptest.model.repository
 
 import android.content.Context
-import com.foreknowledge.navermaptest.model.data.MarkerPos
+import com.foreknowledge.navermaptest.model.data.UserMarker
 import com.foreknowledge.navermaptest.model.room.DatabaseService
 import com.foreknowledge.navermaptest.model.room.MarkerEntity
 
@@ -11,9 +11,9 @@ import com.foreknowledge.navermaptest.model.room.MarkerEntity
 class MarkerDataSource(context: Context) {
     private val markerDao = DatabaseService.getInstance(context).markerDao()
 
-    suspend fun getAll(): List<MarkerPos> = markerDao.getAllMarkerEntities().map { it.toMarker() }
+    suspend fun getAll(): List<UserMarker> = markerDao.getAllMarkerEntities().map { it.toUserMarker() }
 
-    suspend fun add(markerPos: MarkerPos) = markerDao.addMarkerEntity(MarkerEntity.fromMarkerPos(markerPos))
+    suspend fun add(userMarker: UserMarker) = markerDao.addMarkerEntity(MarkerEntity.fromUserMarker(userMarker))
 
-    suspend fun delete(markerPos: MarkerPos) = markerDao.deleteMarkerEntity(MarkerEntity.fromMarkerPos(markerPos))
+    suspend fun delete(userMarker: UserMarker) = markerDao.deleteMarkerEntity(MarkerEntity.fromUserMarker(userMarker))
 }

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.foreknowledge.navermaptest.R
-import com.foreknowledge.navermaptest.model.data.MarkerPos
+import com.foreknowledge.navermaptest.model.data.UserMarker
 import com.foreknowledge.navermaptest.model.repository.NaverRepository
 import com.foreknowledge.navermaptest.util.MarkerUtil
 import com.foreknowledge.navermaptest.util.StringUtil
@@ -84,9 +84,9 @@ class MapViewModel(
     }
 
     private fun addMarker(marker: Marker) {
-        val markerPos = MarkerPos.fromMarker(marker)
+        val userMarker = UserMarker.fromMarker(marker)
         coroutineScope.launch {
-            repository.addMarker(markerPos)
+            repository.addMarker(userMarker)
 
             launch(Dispatchers.Main) {
                 MarkerUtil.insertToList(marker)
@@ -95,9 +95,9 @@ class MapViewModel(
     }
 
     private fun deleteMarker(marker: Marker) {
-        val markerPos = MarkerPos.fromMarker(marker)
+        val userMarker = UserMarker.fromMarker(marker)
         coroutineScope.launch {
-            repository.deleteMarker(markerPos)
+            repository.deleteMarker(userMarker)
 
             launch(Dispatchers.Main) {
                 MarkerUtil.removeFromList(marker)

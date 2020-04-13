@@ -9,7 +9,7 @@ import com.naver.maps.map.overlay.Marker
  * Create by Yeji on 08,April,2020.
  */
 object MarkerUtil {
-    val markers = MutableLiveData<MutableList<Marker>>()
+    private val markers = MutableLiveData<MutableList<Marker>>()
 
     init {
         markers.value = mutableListOf()

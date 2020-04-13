@@ -2,7 +2,7 @@ package com.foreknowledge.navermaptest.model.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.foreknowledge.navermaptest.model.data.MarkerPos
+import com.foreknowledge.navermaptest.model.data.UserMarker
 
 /**
  * Create by Yeji on 08,April,2020.
@@ -15,9 +15,9 @@ data class MarkerEntity (
     val id: Long = 0L
 ) {
     companion object {
-        fun fromMarkerPos(markerPos: MarkerPos) =
-            MarkerEntity(markerPos.lat, markerPos.lng, markerPos.id)
+        fun fromUserMarker(userMarker: UserMarker) =
+            MarkerEntity(userMarker.lat, userMarker.lng, userMarker.id)
     }
 
-    fun toMarker(): MarkerPos = MarkerPos(lat, lng, id)
+    fun toUserMarker(): UserMarker = UserMarker(lat, lng, id)
 }
