@@ -13,7 +13,7 @@ class MarkerDataSource(context: Context) {
 
     suspend fun getAll(): List<UserMarker> = markerDao.getAllMarkerEntities().map { it.toUserMarker() }
 
-    suspend fun add(userMarker: UserMarker) = markerDao.addMarkerEntity(MarkerEntity.fromUserMarker(userMarker))
+    suspend fun add(markerEntity: MarkerEntity) = markerDao.addMarkerEntity(markerEntity)
 
-    suspend fun delete(userMarker: UserMarker) = markerDao.deleteMarkerEntity(MarkerEntity.fromUserMarker(userMarker))
+    suspend fun delete(markerEntity: MarkerEntity) = markerDao.deleteMarkerEntity(markerEntity)
 }

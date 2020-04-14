@@ -2,7 +2,7 @@ package com.foreknowledge.navermaptest.model.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.foreknowledge.navermaptest.model.data.UserMarker
+import com.foreknowledge.navermaptest.util.MarkerUtil
 
 /**
  * Create by Yeji on 08,April,2020.
@@ -14,10 +14,6 @@ data class MarkerEntity (
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L
 ) {
-    companion object {
-        fun fromUserMarker(userMarker: UserMarker) =
-            MarkerEntity(userMarker.lat, userMarker.lng, userMarker.id)
-    }
-
-    fun toUserMarker(): UserMarker = UserMarker(lat, lng, id)
+    fun toUserMarker() =
+        MarkerUtil.createUserMarker(lat, lng, id) { true }
 }

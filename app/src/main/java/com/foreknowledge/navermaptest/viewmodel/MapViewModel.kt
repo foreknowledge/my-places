@@ -1,5 +1,6 @@
 package com.foreknowledge.navermaptest.viewmodel
 
+import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +10,6 @@ import com.foreknowledge.navermaptest.model.repository.NaverRepository
 import com.foreknowledge.navermaptest.util.MarkerUtil
 import com.foreknowledge.navermaptest.util.StringUtil
 import com.naver.maps.map.NaverMap
-import com.naver.maps.map.overlay.Marker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,8 +22,8 @@ class MapViewModel(
 ): ViewModel() {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    private val _focusedMarker = MutableLiveData<Marker?>()
-    val focusedMarker: LiveData<Marker?> = _focusedMarker
+    private val _focusedMarker = MutableLiveData<UserMarker?>()
+    val focusedMarker: LiveData<UserMarker?> = _focusedMarker
 
     private val _btnText = MutableLiveData<String>()
     val btnText: LiveData<String> = _btnText
@@ -31,26 +31,10 @@ class MapViewModel(
     private val _btnVisibility = MutableLiveData(false)
     val btnVisibility: LiveData<Boolean> = _btnVisibility
 
-    fun onButtonClick() =
-        _focusedMarker.value?.let { marker ->
-            if (btnText.value == StringUtil.getString(R.string.btn_save))
-                addMarker(marker)
-            else
-                deleteMarker(marker)
+    private val _toastMsg = MutableLiveData<String>()
+    val toastMsg: LiveData<String> = _toastMsg
 
-            _focusedMarker.value = null
-            hideButton()
-        }
-
-    fun onCancelClick() {
-        if (btnText.value == StringUtil.getString(R.string.btn_save))
-            _focusedMarker.value?.map = null
-
-        _focusedMarker.value = null
-        hideButton()
-    }
-
-    private fun onMarkerClick(clickedMarker: Marker): Boolean {
+    private fun onMarkerClick(clickedMarker: UserMarker): Boolean {
         // 기존 focused marker 클릭 -> do nothing
         if (_focusedMarker.value == clickedMarker) return true
 
@@ -65,47 +49,47 @@ class MapViewModel(
         naverMap.setOnMapClickListener { _, coord ->
             MarkerUtil.detachUnsavedMarker(_focusedMarker.value)
             _focusedMarker.value =
-                MarkerUtil.createAndAttachMarker(coord.latitude, coord.longitude, naverMap) { onMarkerClick(it) }
+                MarkerUtil.createUserMarker(coord.latitude, coord.longitude) { onMarkerClick(it) }
             _btnText.value = StringUtil.getString(R.string.btn_save)
         }
 
-    fun initMarkers(naverMap: NaverMap) {
+    fun Button.isSaveButton() = text == StringUtil.getString(R.string.btn_save)
+
+    fun showButton() { _btnVisibility.value = true }
+
+    fun hideButton() {
+        _focusedMarker.value = null
+        _btnVisibility.value = false
+    }
+
+    fun getAllMarkers() {
         coroutineScope.launch {
-            val savedMarkers = repository.getAllMarkers()
+            val userMarkers = repository.getAllMarkers()
 
             launch(Dispatchers.Main) {
-                savedMarkers.forEach { coord ->
-                    MarkerUtil.insertToList(
-                        MarkerUtil.createAndAttachMarker(coord.lat, coord.lng, naverMap) { onMarkerClick(it) }
-                    )
+                userMarkers.forEach { userMarker ->
+                    val pos = userMarker.marker.position
+                    _focusedMarker.value =
+                        MarkerUtil.createUserMarker(pos.latitude, pos.longitude, userMarker.id) { onMarkerClick(it) }
                 }
             }
         }
     }
 
-    private fun addMarker(marker: Marker) {
-        val userMarker = UserMarker.fromMarker(marker)
+    fun addMarker(userMarker: UserMarker) {
+        val pos = userMarker.marker.position
         coroutineScope.launch {
-            repository.addMarker(userMarker)
-
-            launch(Dispatchers.Main) {
-                MarkerUtil.insertToList(marker)
-            }
+            userMarker.id = repository.addMarker(pos.latitude, pos.longitude)
+            _toastMsg.postValue(StringUtil.getString(R.string.msg_saved))
         }
     }
 
-    private fun deleteMarker(marker: Marker) {
-        val userMarker = UserMarker.fromMarker(marker)
+    fun deleteMarker(userMarker: UserMarker) {
+        val pos = userMarker.marker.position
         coroutineScope.launch {
-            repository.deleteMarker(userMarker)
-
-            launch(Dispatchers.Main) {
-                MarkerUtil.removeFromList(marker)
-            }
+            repository.deleteMarker(pos.latitude, pos.longitude, userMarker.id)
+            _toastMsg.postValue(StringUtil.getString(R.string.msg_deleted))
         }
     }
-
-    fun showButton() { _btnVisibility.value = true }
-    private fun hideButton() { _btnVisibility.value = false }
 
 }

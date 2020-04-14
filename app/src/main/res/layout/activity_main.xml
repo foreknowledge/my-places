@@ -33,7 +33,7 @@
 			android:layout_margin="15dp"
 			android:text="@{viewModel.btnText}"
 			android:visibility="@{viewModel.btnVisibility ? View.VISIBLE: View.INVISIBLE}"
-			android:onClick="@{view -> viewModel.onButtonClick()}"
+			android:onClick="onMainClick"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/btn_cancel" />
 
@@ -44,7 +44,7 @@
 			android:layout_margin="15dp"
 			android:text="@string/btn_cancel"
 			android:visibility="@{viewModel.btnVisibility ? View.VISIBLE: View.INVISIBLE}"
-			android:onClick="@{view -> viewModel.onCancelClick()}"
+			android:onClick="onCancelClick"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent" />
 
