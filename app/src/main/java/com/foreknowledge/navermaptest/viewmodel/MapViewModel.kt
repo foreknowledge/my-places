@@ -93,6 +93,7 @@ class MapViewModel(
                     _focusedMarker.value =
                         MarkerUtil.createUserMarker(pos.latitude, pos.longitude, userMarker.id) { onMarkerClick(it) }
                 }
+                _focusedMarker.value = null
             }
         }
     }
