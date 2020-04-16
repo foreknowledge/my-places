@@ -1,36 +1,46 @@
 package com.foreknowledge.navermaptest.network
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * Create by Yeji on 15,April,2020.
  */
 data class GeoResponse (
+	@SerializedName("results")
 	val results: List<ResultResponse>
 )
 
 data class ResultResponse (
-	val name: String,
+	@SerializedName("name")
+	val convertName: String,
+	@SerializedName("region")
 	val region: RegionResponse,
+	@SerializedName("land")
 	val land: LandResponse
 )
 
 data class RegionResponse (
-	val area0: AreaResponse,
+	@SerializedName("area1")
 	val area1: AreaResponse,
+	@SerializedName("area2")
 	val area2: AreaResponse,
-	val area3: AreaResponse
+	@SerializedName("area3")
+	val area3: AreaResponse,
+	@SerializedName("area4")
+	val area4: AreaResponse
 )
 
 data class AreaResponse (
+	@SerializedName("name")
 	val name: String
 )
 
 data class LandResponse (
-	val addition0: AdditionResponse,
-	val addition1: AdditionResponse,
-	val addition2: AdditionResponse
+	@SerializedName("addition0")
+	val addition0: AdditionResponse
 )
 
 data class AdditionResponse (
-	val type: String,
-	val value: String
+	@SerializedName("value")
+	val name: String
 )

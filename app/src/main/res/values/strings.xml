@@ -7,5 +7,7 @@
 
 	<string name="msg_saved">저장되었습니다.</string>
 	<string name="msg_deleted">삭제되었습니다.</string>
+
 	<string name="request_failure">요청 실패</string>
+	<string name="no_result">결과 없음</string>
 </resources>

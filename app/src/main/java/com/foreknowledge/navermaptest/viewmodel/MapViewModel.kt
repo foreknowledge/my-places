@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.foreknowledge.navermaptest.R
 import com.foreknowledge.navermaptest.model.data.UserMarker
 import com.foreknowledge.navermaptest.model.repository.NaverRepository
+import com.foreknowledge.navermaptest.util.GeoUtil.convertStr
 import com.foreknowledge.navermaptest.util.MarkerUtil
 import com.foreknowledge.navermaptest.util.StringUtil
 import com.naver.maps.geometry.LatLng
@@ -56,11 +57,12 @@ class MapViewModel(
 
         repository.getAddressInfo(utmk.x, utmk.y,
         failure = { tag, msg ->
-            Log.d(tag, msg)
+            Log.e(tag, msg)
             _toastMsg.value = StringUtil.getString(R.string.request_failure)
         },
         success = { geoResponse ->
-            Log.d("NaverMapTest", "response: $geoResponse")
+            _toastMsg.value = geoResponse?.convertStr()
+                ?: StringUtil.getString(R.string.no_result)
         })
     }
 
