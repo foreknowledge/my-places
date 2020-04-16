@@ -1,5 +1,6 @@
 package com.foreknowledge.navermaptest.viewmodel
 
+import android.util.Log
 import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,8 +8,11 @@ import androidx.lifecycle.ViewModel
 import com.foreknowledge.navermaptest.R
 import com.foreknowledge.navermaptest.model.data.UserMarker
 import com.foreknowledge.navermaptest.model.repository.NaverRepository
+import com.foreknowledge.navermaptest.util.GeoUtil.convertStr
 import com.foreknowledge.navermaptest.util.MarkerUtil
 import com.foreknowledge.navermaptest.util.StringUtil
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.Utmk
 import com.naver.maps.map.NaverMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +46,24 @@ class MapViewModel(
         _focusedMarker.value = clickedMarker
         _btnText.value = StringUtil.getString(R.string.btn_delete)
 
+        val pos = clickedMarker.marker.position
+        requestMarkerAddr(pos.latitude, pos.longitude)
+
         return true
+    }
+
+    private fun requestMarkerAddr(lat: Double, lng: Double) {
+        val utmk = Utmk.valueOf(LatLng(lat, lng))
+
+        repository.getAddressInfo(utmk.x, utmk.y,
+        failure = { tag, msg ->
+            Log.e(tag, msg)
+            _toastMsg.value = StringUtil.getString(R.string.request_failure)
+        },
+        success = { geoResponse ->
+            _toastMsg.value = geoResponse?.convertStr()
+                ?: StringUtil.getString(R.string.no_result)
+        })
     }
 
     fun setMapClickListener(naverMap: NaverMap) =
@@ -51,6 +72,8 @@ class MapViewModel(
             _focusedMarker.value =
                 MarkerUtil.createUserMarker(coord.latitude, coord.longitude) { onMarkerClick(it) }
             _btnText.value = StringUtil.getString(R.string.btn_save)
+
+            requestMarkerAddr(coord.latitude, coord.longitude)
         }
 
     fun Button.isSaveButton() = text == StringUtil.getString(R.string.btn_save)
@@ -72,6 +95,7 @@ class MapViewModel(
                     _focusedMarker.value =
                         MarkerUtil.createUserMarker(pos.latitude, pos.longitude, userMarker.id) { onMarkerClick(it) }
                 }
+                _focusedMarker.value = null
             }
         }
     }
