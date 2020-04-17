@@ -1,7 +1,6 @@
 package com.foreknowledge.navermaptest.viewmodel
 
 import android.util.Log
-import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,11 +28,14 @@ class MapViewModel(
     private val _focusedMarker = MutableLiveData<UserMarker?>()
     val focusedMarker: LiveData<UserMarker?> = _focusedMarker
 
-    private val _btnText = MutableLiveData<String>()
-    val btnText: LiveData<String> = _btnText
+    private val _addressText = MutableLiveData("")
+    val addressText: LiveData<String> = _addressText
 
-    private val _btnVisibility = MutableLiveData(false)
-    val btnVisibility: LiveData<Boolean> = _btnVisibility
+    private val _isSavedMarker = MutableLiveData<Boolean>()
+    val isSavedMarker: LiveData<Boolean> = _isSavedMarker
+
+    private val _addressVisibility = MutableLiveData(false)
+    val addressVisibility: LiveData<Boolean> = _addressVisibility
 
     private val _toastMsg = MutableLiveData<String>()
     val toastMsg: LiveData<String> = _toastMsg
@@ -44,7 +46,7 @@ class MapViewModel(
 
         MarkerUtil.detachUnsavedMarker(_focusedMarker.value)
         _focusedMarker.value = clickedMarker
-        _btnText.value = StringUtil.getString(R.string.btn_delete)
+        _isSavedMarker.value = true
 
         val pos = clickedMarker.marker.position
         requestMarkerAddr(pos.latitude, pos.longitude)
@@ -61,7 +63,7 @@ class MapViewModel(
             _toastMsg.value = StringUtil.getString(R.string.request_failure)
         },
         success = { geoResponse ->
-            _toastMsg.value = geoResponse?.convertStr()
+            _addressText.value = geoResponse?.convertStr()
                 ?: StringUtil.getString(R.string.no_result)
         })
     }
@@ -71,18 +73,17 @@ class MapViewModel(
             MarkerUtil.detachUnsavedMarker(_focusedMarker.value)
             _focusedMarker.value =
                 MarkerUtil.createUserMarker(coord.latitude, coord.longitude) { onMarkerClick(it) }
-            _btnText.value = StringUtil.getString(R.string.btn_save)
+            _isSavedMarker.value = false
 
             requestMarkerAddr(coord.latitude, coord.longitude)
         }
 
-    fun Button.isSaveButton() = text == StringUtil.getString(R.string.btn_save)
+    fun showAddress() { _addressVisibility.value = true }
 
-    fun showButton() { _btnVisibility.value = true }
-
-    fun hideButton() {
+    fun hideAddress() {
         _focusedMarker.value = null
-        _btnVisibility.value = false
+        _addressText.value = ""
+        _addressVisibility.value = false
     }
 
     fun getAllMarkers() {

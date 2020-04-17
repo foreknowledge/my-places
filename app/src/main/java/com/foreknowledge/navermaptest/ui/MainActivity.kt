@@ -82,7 +82,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun subscribeUi(naverMap: NaverMap) {
 		with(viewModel) {
 			focusedMarker.observe(this@MainActivity, Observer { it?.marker?.map = naverMap })
-			btnText.observe(this@MainActivity, Observer { showButton() })
+			isSavedMarker.observe(this@MainActivity, Observer { showAddress() })
+			addressText.observe(this@MainActivity, Observer { if (it.isNotBlank()) showAddress() })
 			toastMsg.observe(this@MainActivity, Observer { ToastUtil.showToast(it) })
 		}
 	}
@@ -90,14 +91,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 	fun onMainClick(view: View) {
 		with(viewModel) {
 			focusedMarker.value?.let { userMarker ->
-				if (binding.btnMain.isSaveButton())
+				if (!isSavedMarker.value!!)
 					addMarker(userMarker)
 				else {
 					deleteMarker(userMarker)
 					userMarker.marker.map = null
 				}
 
-				hideButton()
+				hideAddress()
 			}
 		}
 	}
@@ -105,10 +106,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 	fun onCancelClick(view: View) {
 		with(viewModel) {
 			// 임시로 만든 marker 삭제
-			if (binding.btnMain.isSaveButton())
+			if (!isSavedMarker.value!!)
 				focusedMarker.value?.marker?.map = null
 
-			hideButton()
+			hideAddress()
 		}
 	}
 }
