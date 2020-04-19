@@ -98,7 +98,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun subscribeUi(naverMap: NaverMap) {
 		with(viewModel) {
 			focusedMarker.observe(this@MainActivity, Observer { it?.marker?.map = naverMap })
-			isSavedMarker.observe(this@MainActivity, Observer { showAddress() })
 			addressText.observe(this@MainActivity, Observer { if (it.isNotBlank()) showAddress() })
 			toastMsg.observe(this@MainActivity, Observer { ToastUtil.showToast(it) })
 		}

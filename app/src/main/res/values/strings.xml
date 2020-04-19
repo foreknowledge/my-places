@@ -8,7 +8,7 @@
 	<string name="msg_saved">저장되었습니다.</string>
 	<string name="msg_deleted">삭제되었습니다.</string>
 
-	<string name="request_failure">요청 실패</string>
+	<string name="request_failure">요청 실패. 인터넷 연결을 확인해 주세요.</string>
 	<string name="no_result">결과 없음</string>
 	<string name="text_no_marker">저장된 장소가 없습니다.</string>
 </resources>
