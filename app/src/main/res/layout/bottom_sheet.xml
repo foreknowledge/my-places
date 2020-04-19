@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<data>
+		<import type="android.view.View" />
+		<variable name="markerCount" type="Integer" />
+	</data>
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/bottom_sheet"
+		android:layout_width="match_parent"
+		android:layout_height="400dp"
+		android:layout_marginStart="10dp"
+		android:layout_marginEnd="10dp"
+		app:behavior_hideable="false"
+		app:behavior_peekHeight="25dp"
+		app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+		<View
+			android:id="@+id/bar"
+			android:layout_width="0dp"
+			android:layout_height="5dp"
+			android:layout_margin="10dp"
+			android:background="@android:color/black"
+			app:layout_constraintWidth_percent="0.333"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/marker_list"/>
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/marker_list"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:background="@color/colorIvory"
+			app:layout_constraintTop_toBottomOf="@+id/bar"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent" />
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:padding="50dp"
+			android:text="@string/text_no_marker"
+			android:textSize="18sp"
+			android:textStyle="bold"
+			android:visibility="@{markerCount == 0 ? View.VISIBLE : View.INVISIBLE}"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/marker_list" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
