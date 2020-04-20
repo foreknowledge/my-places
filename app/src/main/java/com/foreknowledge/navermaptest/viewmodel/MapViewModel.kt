@@ -103,21 +103,24 @@ class MapViewModel(
             repository.getAllPlaces().forEach { place ->
                 val pos = place.marker.position
                 launch (Dispatchers.Main) {
-                    _focusedPlace.value =
-                        PlaceUtil.createPlace(pos.latitude, pos.longitude, place.id) { onPlaceClick(it) }
-                }
-
-                repository.getAddressInfo(
-                    pos.latitude, pos.longitude,
-                    success = { response ->
-                        places[place.id] = Place(place.id, place.marker, response?.convertStr())
-                        _placeList.postValue(places.values.toList())
-                    },
-                    failure = { tag, msg ->
-                        Log.e(tag, msg)
-                        _toastMsg.postValue(StringUtil.getString(R.string.request_failure))
+                    _focusedPlace.value = place.apply {
+                        marker.setOnClickListener { onPlaceClick(this) }
                     }
-                )
+
+                    repository.getAddressInfo(
+                        pos.latitude, pos.longitude,
+                        success = { response ->
+                            places[place.id] = place.apply {
+                                address = response?.convertStr()
+                            }
+                            _placeList.postValue(places.values.toList())
+                        },
+                        failure = { tag, msg ->
+                            Log.e(tag, msg)
+                            _toastMsg.postValue(StringUtil.getString(R.string.request_failure))
+                        }
+                    )
+                }
             }
 
             _focusedPlace.postValue(null)

@@ -8,5 +8,5 @@ import com.naver.maps.map.overlay.Marker
 data class Place (
     var id: Long,
     val marker: Marker,
-    val address: String? = null
+    var address: String? = null
 )
