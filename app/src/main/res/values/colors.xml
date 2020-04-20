@@ -6,4 +6,7 @@
 
 	<color name="colorCardBack">#FAFAFA</color>
 	<color name="colorPlaceBack">#C4CDB8F3</color>
+
+	<color name="colorMarkerGreen">#37C85D</color>
+	<color name="colorMarkerRed">#F55D2F</color>
 </resources>

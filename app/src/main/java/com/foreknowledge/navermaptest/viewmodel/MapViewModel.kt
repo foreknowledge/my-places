@@ -6,10 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.foreknowledge.navermaptest.R
 import com.foreknowledge.navermaptest.model.data.Place
-import com.foreknowledge.navermaptest.model.data.UserMarker
 import com.foreknowledge.navermaptest.model.repository.NaverRepository
 import com.foreknowledge.navermaptest.util.GeoUtil.convertStr
-import com.foreknowledge.navermaptest.util.MarkerUtil
+import com.foreknowledge.navermaptest.util.PlaceUtil
 import com.foreknowledge.navermaptest.util.StringUtil
 import com.naver.maps.map.NaverMap
 import kotlinx.coroutines.CoroutineScope
@@ -28,14 +27,14 @@ class MapViewModel(
     private val _placeList = MutableLiveData<List<Place>>()
     val placeList: LiveData<List<Place>> = _placeList
 
-    private val _focusedMarker = MutableLiveData<UserMarker?>()
-    val focusedMarker: LiveData<UserMarker?> = _focusedMarker
+    private val _focusedPlace = MutableLiveData<Place?>()
+    val focusedPlace: LiveData<Place?> = _focusedPlace
 
     private val _addressText = MutableLiveData("")
     val addressText: LiveData<String> = _addressText
 
-    private val _isSavedMarker = MutableLiveData<Boolean>()
-    val isSavedMarker: LiveData<Boolean> = _isSavedMarker
+    private val _isSavedPlace = MutableLiveData<Boolean>()
+    val isSavedPlace: LiveData<Boolean> = _isSavedPlace
 
     private val _addressVisibility = MutableLiveData(false)
     val addressVisibility: LiveData<Boolean> = _addressVisibility
@@ -43,21 +42,21 @@ class MapViewModel(
     private val _toastMsg = MutableLiveData<String>()
     val toastMsg: LiveData<String> = _toastMsg
 
-    private fun onMarkerClick(clickedMarker: UserMarker): Boolean {
-        // 기존 focused marker 클릭 -> do nothing
-        if (_focusedMarker.value == clickedMarker) return true
+    private fun onPlaceClick(clickedPlace: Place): Boolean {
+        // 기존 focused place 클릭 -> do nothing
+        if (_focusedPlace.value == clickedPlace) return true
 
-        MarkerUtil.detachUnsavedMarker(_focusedMarker.value)
-        _focusedMarker.value = clickedMarker
-        _isSavedMarker.value = true
+        PlaceUtil.detachUnsavedPlace(_focusedPlace.value)
+        setFocusedPlace(clickedPlace)
+        _isSavedPlace.value = true
 
-        val pos = clickedMarker.marker.position
-        requestMarkerAddr(pos.latitude, pos.longitude)
+        val pos = clickedPlace.marker.position
+        requestPlaceAddr(pos.latitude, pos.longitude)
 
         return true
     }
 
-    private fun requestMarkerAddr(lat: Double, lng: Double) =
+    private fun requestPlaceAddr(lat: Double, lng: Double) =
         repository.getAddressInfo(
             lat, lng,
             failure = { tag, msg ->
@@ -71,35 +70,47 @@ class MapViewModel(
 
     fun setMapClickListener(naverMap: NaverMap) =
         naverMap.setOnMapClickListener { _, coord ->
-            MarkerUtil.detachUnsavedMarker(_focusedMarker.value)
-            _focusedMarker.value =
-                MarkerUtil.createUserMarker(coord.latitude, coord.longitude) { onMarkerClick(it) }
-            _isSavedMarker.value = false
+            PlaceUtil.detachUnsavedPlace(_focusedPlace.value)
+            setFocusedPlace(PlaceUtil.createPlace(coord.latitude, coord.longitude) { onPlaceClick(it) })
+            _isSavedPlace.value = false
 
-            requestMarkerAddr(coord.latitude, coord.longitude)
+            requestPlaceAddr(coord.latitude, coord.longitude)
         }
 
     fun showAddress() { _addressVisibility.value = true }
 
     fun hideAddress() {
-        _focusedMarker.postValue(null)
+        PlaceUtil.loseFocus(_focusedPlace.value?.marker)
+        _focusedPlace.postValue(null)
         _addressText.postValue("")
         _addressVisibility.postValue(false)
     }
 
-    fun getAllMarkers() {
+    private fun setFocusedPlace(place: Place) {
+        PlaceUtil.loseFocus(_focusedPlace.value?.marker)
+        PlaceUtil.getFocus(place.marker)
+        _focusedPlace.value = place
+    }
+
+    fun placesItemClick(place: Place) {
+        setFocusedPlace(place)
+        _isSavedPlace.value = true
+        _addressText.value = place.address
+    }
+
+    fun getAllPlaces() {
         coroutineScope.launch {
-            repository.getAllMarkers().forEach { userMarker ->
-                val pos = userMarker.marker.position
+            repository.getAllPlaces().forEach { place ->
+                val pos = place.marker.position
                 launch (Dispatchers.Main) {
-                    _focusedMarker.value =
-                        MarkerUtil.createUserMarker(pos.latitude, pos.longitude, userMarker.id) { onMarkerClick(it) }
+                    _focusedPlace.value =
+                        PlaceUtil.createPlace(pos.latitude, pos.longitude, place.id) { onPlaceClick(it) }
                 }
 
                 repository.getAddressInfo(
                     pos.latitude, pos.longitude,
                     success = { response ->
-                        places[userMarker.id] = Place(pos.latitude, pos.longitude, response?.convertStr())
+                        places[place.id] = Place(place.id, place.marker, response?.convertStr())
                         _placeList.postValue(places.values.toList())
                     },
                     failure = { tag, msg ->
@@ -109,15 +120,15 @@ class MapViewModel(
                 )
             }
 
-            launch(Dispatchers.Main) { _focusedMarker.value = null }
+            _focusedPlace.postValue(null)
         }
     }
 
-    fun addMarker(userMarker: UserMarker) {
-        val pos = userMarker.marker.position
+    fun addPlace(place: Place) {
+        val pos = place.marker.position
         coroutineScope.launch {
-            userMarker.id = repository.addMarker(pos.latitude, pos.longitude)
-            places[userMarker.id] = Place(pos.latitude, pos.longitude, addressText.value)
+            place.id = repository.addPlace(pos.latitude, pos.longitude)
+            places[place.id] = Place(place.id, place.marker, addressText.value)
             _placeList.postValue(places.values.toList())
             _toastMsg.postValue(StringUtil.getString(R.string.msg_saved))
 
@@ -125,11 +136,11 @@ class MapViewModel(
         }
     }
 
-    fun deleteMarker(userMarker: UserMarker) {
-        val pos = userMarker.marker.position
+    fun deletePlace(place: Place) {
+        val pos = place.marker.position
         coroutineScope.launch {
-            repository.deleteMarker(pos.latitude, pos.longitude, userMarker.id)
-            places.remove(userMarker.id)
+            repository.deletePlace(pos.latitude, pos.longitude, place.id)
+            places.remove(place.id)
             _placeList.postValue(places.values.toList())
             _toastMsg.postValue(StringUtil.getString(R.string.msg_deleted))
 

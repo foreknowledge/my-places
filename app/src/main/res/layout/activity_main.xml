@@ -79,7 +79,7 @@
 					android:layout_marginEnd="30dp"
 					android:layout_gravity="bottom|end"
 					android:backgroundTint="@android:color/holo_orange_light"
-					android:src="@{viewModel.isSavedMarker() ? @drawable/ic_delete : @drawable/ic_add}"
+					android:src="@{viewModel.isSavedPlace() ? @drawable/ic_delete : @drawable/ic_add}"
 					android:onClick="fabClick"
 					app:borderWidth="0dp"
 					app:fabSize="normal"

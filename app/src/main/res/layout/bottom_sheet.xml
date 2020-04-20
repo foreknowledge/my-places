@@ -56,7 +56,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:padding="50dp"
-			android:text="@string/text_no_marker"
+			android:text="@string/text_no_place"
 			android:textSize="18sp"
 			android:textStyle="bold"
 			android:visibility="@{placeCount == 0 ? View.VISIBLE : View.INVISIBLE}"

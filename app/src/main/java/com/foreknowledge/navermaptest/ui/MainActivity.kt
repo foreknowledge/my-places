@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 		)[MapViewModel::class.java]
 	}
 
-	private lateinit var recyclerAdapter: RecyclerAdapter
+	private lateinit var placeRecyclerAdapter: PlaceRecyclerAdapter
 	private lateinit var locationSource: FusedLocationSource
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,21 +71,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 	@UiThread
 	override fun onMapReady(naverMap: NaverMap) {
-		viewModel.getAllMarkers()
+		viewModel.getAllPlaces()
 		viewModel.setMapClickListener(naverMap)
 
-		initBottomSheet()
+		initBottomSheet(naverMap)
 		initLocation(naverMap)
 		subscribeUi(naverMap)
 	}
 
-	private fun initBottomSheet() {
+	private fun initBottomSheet(naverMap: NaverMap) {
 		BottomSheetBehavior.from(bottom_sheet)
 
-		recyclerAdapter = RecyclerAdapter(viewModel.placeList.value ?: listOf())
+		placeRecyclerAdapter =
+			PlaceRecyclerAdapter(viewModel.placeList.value ?: listOf(), naverMap) { place ->
+			viewModel.placesItemClick(place)
+		}
 
 		place_list.layoutManager = LinearLayoutManager(this)
-		place_list.adapter = recyclerAdapter
+		place_list.adapter = placeRecyclerAdapter
 	}
 
 	private fun initLocation(naverMap: NaverMap) {
@@ -103,24 +106,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 	private fun subscribeUi(naverMap: NaverMap) {
 		with(viewModel) {
-			focusedMarker.observe(this@MainActivity, Observer { it?.marker?.map = naverMap })
+			focusedPlace.observe(this@MainActivity, Observer { it?.marker?.map = naverMap })
 			addressText.observe(this@MainActivity, Observer { if (it.isNotBlank()) showAddress() })
 			toastMsg.observe(this@MainActivity, Observer { ToastUtil.showToast(it) })
 			placeList.observe(this@MainActivity, Observer {
-				recyclerAdapter.updatePlaces(it)
-				binding.placeCount = recyclerAdapter.itemCount
+				placeRecyclerAdapter.updatePlaces(it)
+				binding.placeCount = placeRecyclerAdapter.itemCount
 			})
 		}
 	}
 
 	fun fabClick(view: View) {
 		with(viewModel) {
-			focusedMarker.value?.let { userMarker ->
-				if (!isSavedMarker.value!!)
-					addMarker(userMarker)
+			focusedPlace.value?.let { place ->
+				if (!isSavedPlace.value!!)
+					addPlace(place)
 				else {
-					deleteMarker(userMarker)
-					userMarker.marker.map = null
+					deletePlace(place)
+					place.marker.map = null
 				}
 			}
 		}
@@ -128,9 +131,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 	fun cancelClick(view: View) {
 		with(viewModel) {
-			// 임시로 만든 marker 삭제
-			if (!isSavedMarker.value!!)
-				focusedMarker.value?.marker?.map = null
+			// 임시로 만든 place 삭제
+			if (!isSavedPlace.value!!)
+				focusedPlace.value?.marker?.map = null
 
 			hideAddress()
 		}

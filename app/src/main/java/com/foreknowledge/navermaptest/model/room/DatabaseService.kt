@@ -8,11 +8,11 @@ import androidx.room.RoomDatabase
 /**
  * Create by Yeji on 08,April,2020.
  */
-@Database(entities = [MarkerEntity::class], version = 1, exportSchema = false)
+@Database(entities = [PlaceEntity::class], version = 1, exportSchema = false)
 abstract class DatabaseService: RoomDatabase() {
 
     companion object {
-        private const val DATABASE_NAME = "marker.db"
+        private const val DATABASE_NAME = "place.db"
 
         private var instance: DatabaseService? = null
 
@@ -26,5 +26,5 @@ abstract class DatabaseService: RoomDatabase() {
             (instance ?: create(context)).also { instance = it }
     }
 
-    abstract fun markerDao(): MarkerDao
+    abstract fun placeDao(): PlaceDao
 }
