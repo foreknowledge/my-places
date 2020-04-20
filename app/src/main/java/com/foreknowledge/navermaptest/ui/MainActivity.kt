@@ -7,6 +7,7 @@ import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.foreknowledge.navermaptest.LOCATION_PERMISSION_REQUEST_CODE
 import com.foreknowledge.navermaptest.R
 import com.foreknowledge.navermaptest.databinding.ActivityMainBinding
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 		)[MapViewModel::class.java]
 	}
 
+	private lateinit var recyclerAdapter: RecyclerAdapter
 	private lateinit var locationSource: FusedLocationSource
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +48,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 
 	private fun initView() {
-		binding.markerCount = 0
 		binding.viewModel = viewModel
 		binding.lifecycleOwner = this
 
@@ -80,6 +81,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 	private fun initBottomSheet() {
 		BottomSheetBehavior.from(bottom_sheet)
+
+		recyclerAdapter = RecyclerAdapter(viewModel.placeList.value ?: listOf())
+
+		marker_list.layoutManager = LinearLayoutManager(this)
+		marker_list.adapter = recyclerAdapter
 	}
 
 	private fun initLocation(naverMap: NaverMap) {
@@ -100,6 +106,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 			focusedMarker.observe(this@MainActivity, Observer { it?.marker?.map = naverMap })
 			addressText.observe(this@MainActivity, Observer { if (it.isNotBlank()) showAddress() })
 			toastMsg.observe(this@MainActivity, Observer { ToastUtil.showToast(it) })
+			placeList.observe(this@MainActivity, Observer {
+				recyclerAdapter.updatePlaces(it)
+				binding.placeCount = recyclerAdapter.itemCount
+			})
 		}
 	}
 
@@ -112,8 +122,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 					deleteMarker(userMarker)
 					userMarker.marker.map = null
 				}
-
-				hideAddress()
 			}
 		}
 	}

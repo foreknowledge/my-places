@@ -6,7 +6,7 @@
 
 	<data>
 		<import type="android.view.View" />
-		<variable name="markerCount" type="Integer" />
+		<variable name="placeCount" type="Integer" />
 		<variable
 			name="viewModel"
 			type="com.foreknowledge.navermaptest.viewmodel.MapViewModel" />
@@ -92,7 +92,7 @@
 
 		<!-- Adding bottom sheet after main content -->
 		<include layout="@layout/bottom_sheet"
-			bind:markerCount="@{markerCount}"/>
+			bind:placeCount="@{placeCount}"/>
 
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.foreknowledge.navermaptest.network.GeoResponse
 import com.foreknowledge.navermaptest.model.room.MarkerEntity
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.Utmk
 
 /**
  * Create by Yeji on 08,April,2020.
@@ -30,8 +32,11 @@ class NaverRepository(context: Context) {
     }
 
     fun getAddressInfo(
-        x: Double, y: Double,
+        lat: Double, lng: Double,
         success: (response: GeoResponse?) -> Unit,
         failure: (String, String) -> Unit
-    ) = geoDataSource.requestAddr(x, y, success, failure)
+    ) {
+        val utmk = Utmk.valueOf(LatLng(lat, lng))
+        geoDataSource.requestAddr(utmk.x, utmk.y, success, failure)
+    }
 }
