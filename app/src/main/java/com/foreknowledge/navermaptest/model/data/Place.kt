@@ -5,7 +5,8 @@ import com.naver.maps.map.overlay.Marker
 /**
  * Create by Yeji on 08,April,2020.
  */
-data class UserMarker (
+data class Place (
+    var id: Long,
     val marker: Marker,
-    var id: Long
+    val address: String? = null
 )

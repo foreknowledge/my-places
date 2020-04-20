@@ -7,6 +7,7 @@ import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.foreknowledge.navermaptest.LOCATION_PERMISSION_REQUEST_CODE
 import com.foreknowledge.navermaptest.R
 import com.foreknowledge.navermaptest.databinding.ActivityMainBinding
@@ -14,12 +15,14 @@ import com.foreknowledge.navermaptest.model.repository.NaverRepository
 import com.foreknowledge.navermaptest.util.ToastUtil
 import com.foreknowledge.navermaptest.viewmodel.MapViewModel
 import com.foreknowledge.navermaptest.viewmodel.MainViewModelFactory
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.bottom_sheet.*
 
 @Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -31,12 +34,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 		)[MapViewModel::class.java]
 	}
 
+	private lateinit var placeRecyclerAdapter: PlaceRecyclerAdapter
 	private lateinit var locationSource: FusedLocationSource
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+		initView()
+
+		// 현재 위치 권한 요청
+		locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+	}
+
+	private fun initView() {
 		binding.viewModel = viewModel
 		binding.lifecycleOwner = this
 
@@ -45,12 +56,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 			supportFragmentManager.beginTransaction().add(R.id.map, it).commit()
 		}
 		mapFragment.getMapAsync(this)
-
-		// 현재 위치 권한 요청
-		locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 	}
 
-	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+	override fun onRequestPermissionsResult(
+		requestCode: Int,
+		permissions: Array<String>,
+		grantResults: IntArray
+	) {
 		if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults))
 			return
 
@@ -59,11 +71,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 	@UiThread
 	override fun onMapReady(naverMap: NaverMap) {
-		viewModel.getAllMarkers()
+		viewModel.getAllPlaces()
 		viewModel.setMapClickListener(naverMap)
 
+		initBottomSheet(naverMap)
 		initLocation(naverMap)
 		subscribeUi(naverMap)
+	}
+
+	private fun initBottomSheet(naverMap: NaverMap) {
+		BottomSheetBehavior.from(bottom_sheet)
+
+		placeRecyclerAdapter =
+			PlaceRecyclerAdapter(viewModel.placeList.value ?: listOf(), naverMap) { place ->
+			viewModel.placesItemClick(place)
+		}
+
+		place_list.layoutManager = LinearLayoutManager(this)
+		place_list.adapter = placeRecyclerAdapter
 	}
 
 	private fun initLocation(naverMap: NaverMap) {
@@ -81,34 +106,37 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 	private fun subscribeUi(naverMap: NaverMap) {
 		with(viewModel) {
-			focusedMarker.observe(this@MainActivity, Observer { it?.marker?.map = naverMap })
-			btnText.observe(this@MainActivity, Observer { showButton() })
+			focusedPlace.observe(this@MainActivity, Observer { it?.marker?.map = naverMap })
+			addressText.observe(this@MainActivity, Observer { if (it.isNotBlank()) showAddress() })
 			toastMsg.observe(this@MainActivity, Observer { ToastUtil.showToast(it) })
+			placeList.observe(this@MainActivity, Observer {
+				placeRecyclerAdapter.updatePlaces(it)
+				binding.placeCount = placeRecyclerAdapter.itemCount
+			})
 		}
 	}
 
-	fun onMainClick(view: View) {
+	fun fabClick(view: View) {
 		with(viewModel) {
-			focusedMarker.value?.let { userMarker ->
-				if (binding.btnMain.isSaveButton())
-					addMarker(userMarker)
+			focusedPlace.value?.let { place ->
+				if (!isSavedPlace.value!!)
+					addPlace(place)
 				else {
-					deleteMarker(userMarker)
-					userMarker.marker.map = null
+					deletePlace(place)
+					place.marker.map = null
 				}
-
-				hideButton()
 			}
 		}
 	}
 
-	fun onCancelClick(view: View) {
+	fun cancelClick(view: View) {
 		with(viewModel) {
-			// 임시로 만든 marker 삭제
-			if (binding.btnMain.isSaveButton())
-				focusedMarker.value?.marker?.map = null
+			// 임시로 만든 place 삭제
+			if (!isSavedPlace.value!!)
+				focusedPlace.value?.marker?.map = null
 
-			hideButton()
+			hideAddress()
 		}
 	}
+
 }
