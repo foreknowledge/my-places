@@ -43,8 +43,6 @@
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_marginBottom="28dp"
-					android:paddingBottom="20dp"
 					android:background="@color/colorCardBack"
 					android:orientation="horizontal" >
 
@@ -72,20 +70,6 @@
 
 				</LinearLayout>
 
-				<com.google.android.material.floatingactionbutton.FloatingActionButton
-					android:id="@+id/fab"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginEnd="30dp"
-					android:layout_gravity="bottom|end"
-					android:backgroundTint="@android:color/holo_orange_light"
-					android:src="@{viewModel.isSavedPlace() ? @drawable/ic_delete : @drawable/ic_add}"
-					android:onClick="fabClick"
-					app:borderWidth="0dp"
-					app:fabSize="normal"
-					app:layout_constraintBottom_toBottomOf="parent"
-					app:layout_constraintEnd_toEndOf="parent"/>
-
 			</FrameLayout>
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
@@ -93,6 +77,22 @@
 		<!-- Adding bottom sheet after main content -->
 		<include layout="@layout/bottom_sheet"
 			bind:placeCount="@{placeCount}"/>
+
+		<com.google.android.material.floatingactionbutton.FloatingActionButton
+			android:id="@+id/fab"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="30dp"
+			android:layout_marginEnd="30dp"
+			android:layout_gravity="bottom|end"
+			android:backgroundTint="@android:color/holo_orange_light"
+			android:src="@{viewModel.isSavedPlace() ? @drawable/ic_delete : @drawable/ic_add}"
+			android:visibility="@{viewModel.addressVisibility ? View.VISIBLE: View.INVISIBLE}"
+			android:onClick="fabClick"
+			app:borderWidth="0dp"
+			app:fabSize="normal"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"/>
 
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
