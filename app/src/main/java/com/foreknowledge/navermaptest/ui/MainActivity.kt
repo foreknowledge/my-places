@@ -84,8 +84,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 		recyclerAdapter = RecyclerAdapter(viewModel.placeList.value ?: listOf())
 
-		marker_list.layoutManager = LinearLayoutManager(this)
-		marker_list.adapter = recyclerAdapter
+		place_list.layoutManager = LinearLayoutManager(this)
+		place_list.adapter = recyclerAdapter
 	}
 
 	private fun initLocation(naverMap: NaverMap) {

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.foreknowledge.navermaptest.R
 import com.foreknowledge.navermaptest.model.data.Place
-import kotlinx.android.synthetic.main.list_item.view.*
+import kotlinx.android.synthetic.main.item_place.view.*
 
 /**
  * Create by Yeji on 19,April,2020.
@@ -28,7 +28,7 @@ class RecyclerAdapter(
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder =
-		RecyclerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
+		RecyclerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_place, parent, false))
 
 	override fun getItemCount(): Int = places.size
 
