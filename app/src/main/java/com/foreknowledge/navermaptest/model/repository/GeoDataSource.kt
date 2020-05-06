@@ -1,7 +1,7 @@
 package com.foreknowledge.navermaptest.model.repository
 
 import com.foreknowledge.navermaptest.network.GeoResponse
-import com.foreknowledge.navermaptest.network.RetrofitBuilder
+import com.foreknowledge.navermaptest.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,7 +11,7 @@ import retrofit2.Response
  */
 object GeoDataSource {
 	private val TAG = GeoDataSource::class.java.simpleName
-	private val serviceApi = RetrofitBuilder.service
+	private val serviceApi = RetrofitClient.service
 
 	fun requestAddr(
 		x: Double, y: Double,

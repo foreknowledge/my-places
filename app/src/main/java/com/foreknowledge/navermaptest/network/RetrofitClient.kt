@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * Create by Yeji on 15,April,2020.
  */
-object RetrofitBuilder {
+object RetrofitClient {
 	val service: GeoService = initService()
 
 	private fun initService(): GeoService {

@@ -10,14 +10,13 @@ import okhttp3.Response
  * Create by Yeji on 16,April,2020.
  */
 class HeaderInterceptor : Interceptor {
-	override fun intercept(chain: Interceptor.Chain): Response {
-		val origin = chain.request()
-		val request = origin.newBuilder()
-			.addHeader(HEADER_CLIENT_ID, BuildConfig.NAVER_CLIENT_ID)
-			.addHeader(HEADER_CLIENT_SECRET, BuildConfig.NAVER_CLIENT_SECRET)
-			.method(origin.method(), origin.body())
-			.build()
-
-		return chain.proceed(request)
+	override fun intercept(chain: Interceptor.Chain): Response = chain.run {
+		proceed(
+			request()
+				.newBuilder()
+				.addHeader(HEADER_CLIENT_ID, BuildConfig.NAVER_CLIENT_ID)
+				.addHeader(HEADER_CLIENT_SECRET, BuildConfig.NAVER_CLIENT_SECRET)
+				.build()
+		)
 	}
 }
