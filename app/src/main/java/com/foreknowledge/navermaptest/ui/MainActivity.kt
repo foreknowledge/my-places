@@ -22,7 +22,6 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.bottom_sheet.*
 
 @Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -80,15 +79,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 
 	private fun initBottomSheet(naverMap: NaverMap) {
-		BottomSheetBehavior.from(bottom_sheet)
+		BottomSheetBehavior.from(binding.bottomSheet.container)
 
 		placeRecyclerAdapter =
 			PlaceRecyclerAdapter(viewModel.placeList.value ?: listOf(), naverMap) { place ->
 			viewModel.placesItemClick(place)
 		}
 
-		place_list.layoutManager = LinearLayoutManager(this)
-		place_list.adapter = placeRecyclerAdapter
+		with (binding.bottomSheet.placeList) {
+			layoutManager = LinearLayoutManager(this@MainActivity)
+			adapter = placeRecyclerAdapter
+		}
 	}
 
 	private fun initLocation(naverMap: NaverMap) {

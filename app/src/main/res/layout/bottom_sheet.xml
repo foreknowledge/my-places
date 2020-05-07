@@ -9,7 +9,7 @@
 	</data>
 
 	<FrameLayout
-		android:id="@+id/bottom_sheet"
+		android:id="@+id/container"
 		android:layout_width="match_parent"
 		android:layout_height="330dp"
 		android:layout_marginStart="10dp"

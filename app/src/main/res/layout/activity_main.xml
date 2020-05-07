@@ -32,50 +32,45 @@
 				app:layout_constraintTop_toTopOf="parent"
 				tools:ignore="FragmentTagUsage" />
 
-			<FrameLayout
+			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:background="@color/colorCardBack"
+				android:orientation="horizontal"
 				android:visibility="@{viewModel.addressVisibility ? View.VISIBLE: View.INVISIBLE}"
 				app:layout_constraintTop_toTopOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent">
+				app:layout_constraintEnd_toEndOf="parent" >
 
-				<LinearLayout
-					android:layout_width="match_parent"
+				<TextView
+					android:id="@+id/tv_address"
+					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-					android:background="@color/colorCardBack"
-					android:orientation="horizontal" >
+					android:layout_weight="1"
+					android:layout_margin="8dp"
+					android:text="@{viewModel.addressText}"
+					android:textColor="@android:color/black"
+					android:textStyle="bold"
+					android:textSize="16sp" />
 
-					<TextView
-						android:id="@+id/tv_address"
-						android:layout_width="0dp"
-						android:layout_height="wrap_content"
-						android:layout_weight="1"
-						android:layout_margin="8dp"
-						android:text="@{viewModel.addressText}"
-						android:textColor="@android:color/black"
-						android:textStyle="bold"
-						android:textSize="16sp" />
+				<ImageButton
+					android:id="@+id/btn_cancel"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="8dp"
+					android:layout_marginEnd="8dp"
+					android:src="@drawable/ic_close"
+					android:background="@android:color/transparent"
+					android:contentDescription="@string/btn_cancel"
+					android:onClick="cancelClick" />
 
-					<ImageButton
-						android:id="@+id/btn_cancel"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="8dp"
-						android:layout_marginEnd="8dp"
-						android:src="@drawable/ic_close"
-						android:background="@android:color/transparent"
-						android:contentDescription="@string/btn_cancel"
-						android:onClick="cancelClick" />
-
-				</LinearLayout>
-
-			</FrameLayout>
+			</LinearLayout>
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 
 		<!-- Adding bottom sheet after main content -->
 		<include layout="@layout/bottom_sheet"
+			android:id="@+id/bottom_sheet"
 			bind:placeCount="@{placeCount}"/>
 
 		<com.google.android.material.floatingactionbutton.FloatingActionButton
