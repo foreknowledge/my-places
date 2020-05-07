@@ -93,6 +93,7 @@ class MapViewModel(
     }
 
     fun placesItemClick(place: Place) {
+        PlaceUtil.detachUnsavedPlace(_focusedPlace.value)
         setFocusedPlace(place)
         _isSavedPlace.value = true
         _addressText.value = place.address
