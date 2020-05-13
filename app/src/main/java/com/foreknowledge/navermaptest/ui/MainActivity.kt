@@ -50,11 +50,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 		binding.viewModel = viewModel
 		binding.lifecycleOwner = this
 
-		// map fragment 초기화
-		val mapFragment = (map as MapFragment?) ?: MapFragment.newInstance().also {
-			supportFragmentManager.beginTransaction().add(R.id.map, it).commit()
-		}
-		mapFragment.getMapAsync(this)
+		// map fragment
+		(map as MapFragment).getMapAsync(this)
 	}
 
 	override fun onRequestPermissionsResult(
