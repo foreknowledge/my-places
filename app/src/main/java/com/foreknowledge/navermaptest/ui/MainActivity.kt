@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 		BottomSheetBehavior.from(binding.bottomSheet.container)
 
 		placeRecyclerAdapter =
-			PlaceRecyclerAdapter(viewModel.placeList.value ?: listOf(), naverMap) { place ->
+			PlaceRecyclerAdapter(naverMap) { place ->
 			viewModel.placesItemClick(place)
 		}
 

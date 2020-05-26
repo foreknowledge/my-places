@@ -114,11 +114,11 @@ class MapViewModel(
                             places[place.id] = place.apply {
                                 address = response?.convertStr()
                             }
-                            _placeList.postValue(places.values.toList())
+                            _placeList.value = places.values.toList()
                         },
                         failure = { tag, msg ->
                             Log.e(tag, msg)
-                            _toastMsg.postValue(StringUtil.getString(R.string.request_failure))
+                            _toastMsg.value = StringUtil.getString(R.string.request_failure)
                         }
                     )
                 }
