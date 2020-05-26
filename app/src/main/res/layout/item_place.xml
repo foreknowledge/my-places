@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	android:id="@+id/item_place"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:padding="7dp"
-	android:orientation="horizontal"
+<layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools">
 
-	<ImageView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:src="@drawable/ic_place"
-		android:contentDescription="@string/ic_place"/>
+	<data>
+		<variable name="address" type="String" />
+	</data>
 
 	<TextView
-		android:id="@+id/address"
+		android:id="@+id/tv_address"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:padding="7dp"
+		android:text="@{address}"
 		android:textColor="@android:color/black"
 		android:textSize="16sp"
+		android:drawableStart="@drawable/ic_place"
 		tools:text="address" />
 
-</LinearLayout>
+</layout>
