@@ -1,4 +1,4 @@
-# My Place
+# My Places
 
 ## 개요
 
