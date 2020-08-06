@@ -5,7 +5,7 @@ import com.foreknowledge.navermaptest.network.GeoResponse
 import java.lang.Exception
 
 /**
- * Create by Yeji on 16,April,2020.
+ * Created by Yeji on 16,April,2020.
  */
 object GeoUtil {
 	private const val TAG = "GeoUtil"

@@ -6,7 +6,7 @@ import com.foreknowledge.navermaptest.model.room.DatabaseService
 import com.foreknowledge.navermaptest.model.room.PlaceEntity
 
 /**
- * Create by Yeji on 08,April,2020.
+ * Created by Yeji on 08,April,2020.
  */
 class PlaceDataSource(context: Context) {
     private val placeDao = DatabaseService.getInstance(context).placeDao()

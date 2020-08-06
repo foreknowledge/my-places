@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
- * Create by Yeji on 08,April,2020.
+ * Created by Yeji on 08,April,2020.
  */
 class MapViewModel(
     private val repository: NaverRepository

@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
- * Create by Yeji on 08,April,2020.
+ * Created by Yeji on 08,April,2020.
  */
 object PlaceUtil {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.foreknowledge.navermaptest.util.PlaceUtil
 
 /**
- * Create by Yeji on 08,April,2020.
+ * Created by Yeji on 08,April,2020.
  */
 @Entity
 data class PlaceEntity (

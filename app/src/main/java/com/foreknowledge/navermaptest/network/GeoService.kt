@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 /**
- * Create by Yeji on 15,April,2020.
+ * Created by Yeji on 15,April,2020.
  */
 interface GeoService {
 

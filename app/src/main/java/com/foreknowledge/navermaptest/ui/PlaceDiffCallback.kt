@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.foreknowledge.navermaptest.model.data.Place
 
 /**
- * Create by Yeji on 26,May,2020.
+ * Created by Yeji on 26,May,2020.
  */
 class PlaceDiffCallback : DiffUtil.ItemCallback<Place>() {
     override fun areItemsTheSame(oldItem: Place, newItem: Place) =

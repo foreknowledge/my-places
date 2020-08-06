@@ -11,7 +11,7 @@ import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.NaverMap
 
 /**
- * Create by Yeji on 19,April,2020.
+ * Created by Yeji on 19,April,2020.
  */
 class PlaceRecyclerAdapter(
 	private val naverMap: NaverMap,

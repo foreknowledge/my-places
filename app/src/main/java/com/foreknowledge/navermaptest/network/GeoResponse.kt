@@ -3,7 +3,7 @@ package com.foreknowledge.navermaptest.network
 import com.google.gson.annotations.SerializedName
 
 /**
- * Create by Yeji on 15,April,2020.
+ * Created by Yeji on 15,April,2020.
  */
 data class GeoResponse (
 	@SerializedName("results")

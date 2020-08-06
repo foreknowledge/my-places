@@ -8,7 +8,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.Utmk
 
 /**
- * Create by Yeji on 08,April,2020.
+ * Created by Yeji on 08,April,2020.
  */
 class NaverRepository(context: Context) {
     private val TAG = NaverRepository::class.java.simpleName

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.foreknowledge.navermaptest.model.repository.NaverRepository
 
 /**
- * Create by Yeji on 08,April,2020.
+ * Created by Yeji on 08,April,2020.
  */
 @Suppress("UNCHECKED_CAST")
 class MainViewModelFactory(

@@ -6,7 +6,7 @@ import com.naver.maps.map.NaverMapSdk
 import com.naver.maps.map.NaverMapSdk.NaverCloudPlatformClient
 
 /**
- * Create by Yeji on 11,April,2020.
+ * Created by Yeji on 11,April,2020.
  */
 class GlobalApplication: Application() {
     companion object {

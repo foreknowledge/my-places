@@ -7,7 +7,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 /**
- * Create by Yeji on 15,April,2020.
+ * Created by Yeji on 15,April,2020.
  */
 object GeoDataSource {
 	private val TAG = GeoDataSource::class.java.simpleName

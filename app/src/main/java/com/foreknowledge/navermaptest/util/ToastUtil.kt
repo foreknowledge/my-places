@@ -5,7 +5,7 @@ import android.widget.Toast
 import com.foreknowledge.navermaptest.GlobalApplication
 
 /**
- * Create by Yeji on 13,April,2020.
+ * Created by Yeji on 13,April,2020.
  */
 object ToastUtil {
     fun showToast(message: String) {

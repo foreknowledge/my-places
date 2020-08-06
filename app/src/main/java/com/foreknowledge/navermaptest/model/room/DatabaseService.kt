@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 /**
- * Create by Yeji on 08,April,2020.
+ * Created by Yeji on 08,April,2020.
  */
 @Database(entities = [PlaceEntity::class], version = 1, exportSchema = false)
 abstract class DatabaseService: RoomDatabase() {

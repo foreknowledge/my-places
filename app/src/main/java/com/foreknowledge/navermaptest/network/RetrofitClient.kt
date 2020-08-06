@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
- * Create by Yeji on 15,April,2020.
+ * Created by Yeji on 15,April,2020.
  */
 object RetrofitClient {
 	val service: GeoService = initService()

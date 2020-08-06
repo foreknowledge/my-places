@@ -7,7 +7,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 
 /**
- * Create by Yeji on 16,April,2020.
+ * Created by Yeji on 16,April,2020.
  */
 class HeaderInterceptor : Interceptor {
 	override fun intercept(chain: Interceptor.Chain): Response = chain.run {
