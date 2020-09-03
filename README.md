@@ -24,7 +24,7 @@
 이 저장소를 복제해서 **Android Studio**에 import 합니다.
 
 ```bash
-git clone https://github.com/foreknowledge/NaverMapTest.git
+git clone https://github.com/foreknowledge/my-places.git
 ```
 
 ### 구성
